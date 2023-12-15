@@ -56,32 +56,55 @@
 </ul>
 
 <script>
-    document.querySelectorAll('.copy-link').forEach(x => {
-
-
-        x.addEventListener('click', (e) => {
+    var copyLinks = document.querySelectorAll('.copy-link');
+    for (var i = 0; i < copyLinks.length; i++) {
+        copyLinks[i].addEventListener('click', function(e) {
             e.preventDefault();
-            const dataLink = x.getAttribute('data-link');
-            navigator.clipboard.writeText(dataLink);
-            alert("Link copied to clipboard");
-        })
+            var dataLink = this.getAttribute('data-link');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(dataLink).then(function() {
+                    alert("Link copied to clipboard");
+                }).catch(function(err) {
+                    console.error('Unable to copy text to clipboard', err);
+                });
+            } else {
+                // Jeśli Clipboard API nie jest obsługiwane, użyj alternatywnej metody
+                var textArea = document.createElement('textarea');
+                textArea.value = dataLink;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert("Link copied to clipboard");
+            }
+        });
+    }
 
-
-    })
-
-
-    document.querySelectorAll('.shortcode').forEach(x => {
-
-
-        x.addEventListener('click', (e) => {
+    var shortcodes = document.querySelectorAll('.shortcode');
+    for (var j = 0; j < shortcodes.length; j++) {
+        shortcodes[j].addEventListener('click', function(e) {
             e.preventDefault();
-            const dataLink = x.getAttribute('data-shortcode');
-            navigator.clipboard.writeText('[% dm="' + dataLink + '" %]');
-            alert("shortcode copied to clipboard");
-        })
-
-
-    })
+            var dataShortcode = this.getAttribute('data-shortcode');
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText('[% dm="' + dataShortcode + '" %]').then(function() {
+                    alert("Shortcode copied to clipboard");
+                }).catch(function(err) {
+                    console.error('Unable to copy text to clipboard', err);
+                });
+            } else {
+                // Jeśli Clipboard API nie jest obsługiwane, użyj alternatywnej metody
+                var textArea = document.createElement('textarea');
+                textArea.value = '[% dm="' + dataShortcode + '" %]';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert("Shortcode copied to clipboard");
+            }
+        });
+    }
 </script>
 
 <br>
